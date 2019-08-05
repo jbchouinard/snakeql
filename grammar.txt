@@ -1,0 +1,69 @@
+select      : SELECT distinct fexprplus where groupby returning
+
+where       : WHERE fexpr
+            | empty
+
+distinct    : DISTINCT
+            | empty
+
+groupby     : GROUP BY fexprplus
+            | empty
+
+returning   : RETURNING ID
+            | empty
+
+fexprplus   : fexprs
+            | fexpr
+
+fexprstar   : fexprs
+            | fexpr
+            | empty
+
+fexprs      : fexpr ','
+            | fexprs2plus
+            | fexprs2plus ','    
+
+fexprs2plus : fexprs2plus ',' fexpr
+            | fexpr ',' fexpr
+
+fexpr       : fexpr OR predterm
+            | predterm
+
+predterm    : predterm AND prednfactor
+            | prednfactor
+
+prednfactor : NOT prednfactor
+            | predfactor
+
+predfactor  : predfactor IN fexprs
+            | predfactor COMPARE arithexpr
+            | arithexpr
+
+arithexpr   : arithexpr '+' term
+            | arithexpr '-' term
+            | term
+
+term        : term '*' expnt
+            | term '/' expnt
+            | term '%' expnt
+            | expnt
+
+expnt       : field POW expnt
+            | field
+
+field       : literal
+            | O
+            | O '.' ID
+            | O '[' literal ']'
+            | ID '(' fexprstar ')'
+            | '(' fexpr ')'
+            | field AS ID
+
+literal     : STR
+            | FLOAT
+            | INT
+            | TRUE
+            | FALSE
+            | NONE
+
+empty       :
